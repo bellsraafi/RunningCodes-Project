@@ -1,0 +1,13 @@
+/* Write your custom CSS here */
+body{
+  background: url("assets/images/12/slide-2-1170x500.jpg");
+  background-color: rgba(100, 100, 100, 0.5);
+  background-blend-mode: darken;
+  color: #fff;
+}
+.page-inner{
+	padding-top: 2px;
+}
+.navbar .logo-box a {
+    color: #fff!important;
+}
