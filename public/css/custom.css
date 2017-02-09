@@ -11,3 +11,8 @@ body{
 .navbar .logo-box a {
     color: #fff!important;
 }
+.page-sidebar .page-sidebar-inner {
+    height: 100%!important;
+    position: fixed;
+    scroll-behavior: auto;
+}

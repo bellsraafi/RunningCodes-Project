@@ -29,5 +29,10 @@ class Trainee extends Model
     protected $hidden = [
         'password', 'remember_token',
     ];
+    protected $primaryKey = 'trainee_id';
+
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 
 }

@@ -5,11 +5,17 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Register as</div>
-                <div class="panel-body">
+                <div class="panel-heading panel-header" style="background: url('/images/congruent_pentagon.png')">Register as</div>
+                <div class="panel-body" style="color: #222;">
                     <div role="tabpanel">
                             <!-- Nav tabs -->
-                            <ul class="nav nav-tabs" role="tablist">
+                            <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <style type="text/css">
+                                li.active{
+                                    background: url('/images/congruent_outline.png');
+                                    color: #fff;
+                                }
+                            </style>
                                 <li role="presentation" class="active"><a href="#tab9" role="tab" data-toggle="tab">TRAINEE</a></li>
                                 <li role="presentation"><a href="#tab10" role="tab" data-toggle="tab">BENEFACTOR</a></li>
                             </ul>
@@ -67,7 +73,7 @@
                                             <label for="dob" class="col-md-4 control-label">Date of Birth</label>
                                             <div class="col-md-6">
                                                 <div class="input-group date dob" data-provide="datepicker">
-                                                    <input type="text" class="form-control"  placeholder="dd/mm/yyyy" name="dob" value="{{ old('dob') }}" required>
+                                                    <input type="text" class="form-control"  placeholder="mm/dd/yyyy" name="dob" value="{{ old('dob') }}" required>
                                                     <div class="input-group-addon">
                                                         <span class="glyphicon glyphicon-th"></span>
                                                     </div>
@@ -119,7 +125,7 @@
                                             <label for="c_name" class="col-md-4 control-label">Company Name</label>
 
                                             <div class="col-md-6">
-                                                <input id="c_name" type="text" class="form-control" name="c_name" value="{{ old('c_name') }}" required autofocus>
+                                                <input id="c_name" type="text" class="form-control" name="c_name" value="{{ old('c_name') }}" required>
 
                                                 @if ($errors->has('c_name'))
                                                     <span class="help-block">
@@ -131,10 +137,10 @@
                                         <div class="form-group{{ $errors->has('c_type') ? ' has-error' : '' }}">
                                             <label class="col-sm-4 control-label" for="c_type">Company Type</label>
                                             <div class="col-sm-6">
-                                                <select class="select-group form-control">
+                                                <select class="select-group form-control" name="c_type">
                                                     <option value="0">select company type...</option>
-                                                    <option value="govt">Government</option>
-                                                    <option value="p_ngo">Private NGO</option>
+                                                    <option value="government">Government</option>
+                                                    <option value="private NGO">Private NGO</option>
                                                     
                                                 </select>
                                             </div>
@@ -158,10 +164,10 @@
                                         </div>
 
                                         <div class="form-group{{ $errors->has('bpassword') ? ' has-error' : '' }}">
-                                            <label for="bpassword" class="col-md-4 control-label">Password</label>
+                                            <label for="password" class="col-md-4 control-label">Password</label>
 
                                             <div class="col-md-6">
-                                                <input id="bpassword" type="password" class="form-control" name="bpassword" required>
+                                                <input id="password" type="password" class="form-control" name="password" required>
 
                                                 @if ($errors->has('bpassword'))
                                                     <span class="help-block">
@@ -171,10 +177,10 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="bcpassword" class="col-md-4 control-label">Confirm Password</label>
+                                            <label for="password_confirmation" class="col-md-4 control-label">Confirm Password</label>
 
                                             <div class="col-md-6">
-                                                <input id="bcpassword" type="password" class="form-control" name="bcpassword" required>
+                                                <input id="password_confirmation" type="password" class="form-control" name="password_confirmation" required>
                                             </div>
                                         </div>
                                         <input type="hidden" name="user_type" value="benefactor">

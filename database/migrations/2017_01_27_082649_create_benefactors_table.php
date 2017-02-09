@@ -14,16 +14,14 @@ class CreateBenefactorsTable extends Migration
     public function up()
     {
         Schema::create('benefactors', function (Blueprint $table) {
-            $table->increments('id');
+            //$table->increments('id');
             $table->string('company_name');
             $table->string('company_type');
             $table->string('benefactor_id',10)->unique();
             $table->string('email');
-            $table->string('password');
-            $table->boolean('confirmed')->default(0);
-            $table->string('confirmation_code')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->primary('benefactor_id');
         });
     }
 

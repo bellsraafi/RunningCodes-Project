@@ -14,7 +14,7 @@ class CreateTraineesTable extends Migration
     public function up()
     {
         Schema::create('trainees', function (Blueprint $table) {
-            $table->increments('id');
+            //$table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('username')->nullable();
@@ -22,11 +22,11 @@ class CreateTraineesTable extends Migration
             $table->string('trainee_type')->nullable();
             $table->string('email')->unique();
             $table->date('dob');
-            $table->string('password');
-            $table->boolean('confirmed')->default(0);
-            $table->string('confirmation_code')->nullable();
-            $table->rememberToken();
+            $table->string('profile_pic')->nullable();
+            $table->integer('stateid')->nullable();
+            $table->enum('gender', ['male', 'female'])->nullable();
             $table->timestamps();
+            $table->primary('trainee_id');
         });
     }
 

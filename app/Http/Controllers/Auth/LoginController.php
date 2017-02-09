@@ -32,6 +32,8 @@ class LoginController extends Controller
      *
      * @return void
      */
+    protected $username = 'login_id';
+    
     public function __construct()
     {
         $this->middleware('guest', ['except' => 'logout']);

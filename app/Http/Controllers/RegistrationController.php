@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 //use Carbon\Carbon;
 use App\Http\Controllers\UniversalController;
+use App\User;
 use App\Trainee;
 use App\Benefactor;
 
@@ -21,7 +22,7 @@ class RegistrationController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    //protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -29,11 +30,15 @@ class RegistrationController extends Controller
      * @return void
      */
     public function __construct()
+
     {
-        $this->middleware('guest');
+        //$this->middleware('auth', ['only']);
+        //$this->middleware('guest');
     }
 	protected $mailer;
-	protected $trainee;
+    protected $trainee;
+    protected $user;
+	protected $traineeID;
 
     public function register(Request $request){
     	$user_type = $request['user_type'];
@@ -49,7 +54,7 @@ class RegistrationController extends Controller
     	$rules = [
             'fname' => 'required|alpha|min:3',
             'lname' => 'required|alpha|min:3',
-            'email' => 'required|email|unique:trainees',
+            'email' => 'required|email|unique:users',
             'dob' => 'required|date',
             'password' => 'required|confirmed|min:8',
             'password_confirmation' => 'required'
@@ -59,34 +64,42 @@ class RegistrationController extends Controller
         $validator = $this->validate($request, $rules);
        
 		$uCon = new UniversalController();
-    	$traineeID  = $uCon->traineeIDGen(5);
+    	$this->traineeID  = $uCon->traineeIDGen(5);
 
         $confirmation_code = str_random(30);
 
+        //Insert into trainees table for profile
 		$this->trainee = new Trainee();
 		$this->trainee->first_name = $request['fname'];
 		$this->trainee->last_name = $request['lname'];
-		$this->trainee->trainee_id = $traineeID;
+		$this->trainee->trainee_id = $this->traineeID;
 		$this->trainee->email = $request['email'];
 		$this->trainee->dob = date("Y-m-d",strtotime(str_replace('/','-',$request['dob'])));
-		$this->trainee->password = bcrypt($request['password']);
-		$this->trainee->confirmation_code = $confirmation_code;
 
-		$this->trainee->save();
+        $this->trainee->save();
+
+        //Insert Into users table for login
+        $this->user = new User();
+        $this->user->login_id = $this->traineeID;
+        $this->user->email = $request['email'];
+		$this->user->password = bcrypt($request['password']);
+		$this->user->confirmation_code = $confirmation_code;
+
+        $this->user->save();
 
         \Mail::send(
         	'email.verify', 
-        	['c_code' => $this->trainee->confirmation_code,'login_id' => $this->trainee->trainee_id], 
+        	['c_code' => $this->user->confirmation_code,'login_id' => $this->traineeID], 
         	function($message) {
-            	$message->to($this->trainee->email, $this->trainee->trainee_id)
-                ->subject('Verify your email address');
+            	$message->to($this->user->email, $this->traineeID)
+                ->subject('Confirm Your Account');
         	}
         );
 
-        //Flash::message('Thanks for registering with RunningCodes Project!
-        	//<bre>Kindly check your email for confirmation.');
+        session()->flash('msg', 'Thanks for registering with RunningCodes Project!
+             Your Login ID and a link to your account has been sent to your email.');
 
-        return 'Verify your mail';
+        return redirect()->route('login');
     }
     public function registerBenefactor($request){
     	return 1;
@@ -96,40 +109,29 @@ class RegistrationController extends Controller
     */
     public function confirm($login_id, $confirmation_code)
     {
+        $login_id = strtolower($login_id);
         if( ! $confirmation_code)
         {
             throw new InvalidConfirmationCodeException;
         }
-        if(preg_match("/(ODIT)([\d]{5})$/", $login_id)){
-            $user = Trainee::whereConfirmationCode($confirmation_code)->first();
+        $user = User::whereConfirmationCode($confirmation_code)->first();
 
-            if ( ! $user)
-            {
-                throw new InvalidConfirmationCodeException;
-            }
-
-            $user->confirmed = 1;
-            $user->confirmation_code = null;
-            $user->save();
-        }
-         if(preg_match("/(ODIB)([\d]{5})$/", $login_id)){
-            $user = Benefactor::whereConfirmationCode($confirmation_code)->first();
-
-            if ( ! $user)
-            {
-                throw new InvalidConfirmationCodeException;
-            }
-
-            $user->confirmed = 1;
-            $user->confirmation_code = null;
-            $user->save();
+        if ( ! $user)
+        {
+            throw new InvalidConfirmationCodeException;
         }
 
+        $user->confirmed = 1;
+        $user->confirmation_code = null;
+        $user->save();
+
+        //\Auth::login($user);
+        session()->flash('login_message', 'Your account has been activated successfully. Login to continue');
+        return redirect()->route('update_profile');
         
+        session()->flash('msg', 'You have successfully verified your account. Please kindly ');
 
-        //Flash::message('You have successfully verified your account.');
-
-        return redirect()->url('/welcome');
+        return redirect()->route('update_profile');
     }
 
     public function hello()

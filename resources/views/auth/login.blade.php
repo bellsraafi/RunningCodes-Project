@@ -4,21 +4,32 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
-                <div class="panel-body">
+            <div class="panel panel-default" style="margin-top: 20px;">
+                <div class="panel-heading" style="background: url('/images/congruent_pentagon.png')">Login</div>
+                <div class="panel-body" style="margin-top: 50px;color: #222;">
+                    <div class="col-md-8 col-md-offset-2">
+                        @if(Session::has('msg'))
+                        <div class="alert alert-success alert-dismissable">{{Session::get('msg')}}</div>
+                        @endif
+                        @if(Session::has('msg'))
+                        <div class="alert alert-success alert-dismissable">{{Session::get('login_message')}}</div>
+                        @endif
+                         @if(Session::has('credentials'))
+                            <div class="alert alert-success alert-dismissable">{{Session::get('credentials')}}</div>
+                        @endif
+                    </div>
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+                            <label for="login_id" class="col-md-4 control-label">Login ID</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
+                                <input id="login_id" type="text" class="form-control" name="login_id" value="{{ old('login_id') }}" required autofocus>
 
-                                @if ($errors->has('email'))
+                                @if ($errors->has('login_id'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                        <strong>{{ $errors->first('login_id') }}</strong>
                                     </span>
                                 @endif
                             </div>
